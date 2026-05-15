@@ -51,6 +51,7 @@
                     </execution>
                 </executions>
                 <configuration>
+                    <cupFile>src/main/cup/Parser.cup</cupFile>
                     <outputDirectory>${project.build.directory}/generated-sources/cup</outputDirectory>
                 </configuration>
             </plugin>
