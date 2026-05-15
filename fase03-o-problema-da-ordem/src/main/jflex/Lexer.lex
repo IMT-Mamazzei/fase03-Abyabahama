@@ -49,36 +49,40 @@ Identifier = {Letter}({Letter}|{Digit}|_){0,31}
     /* Regra para ignorar espaços em branco */
     {WhiteSpace}    { /* Não faz nada */ }
 
-    /* TODO 3: Palavras Reservadas (if, then, else, while) */
+    /* Palavras Reservadas */
     "if"            { return symbol(sym.IF); }
     "then"          { return symbol(sym.THEN); }
-    /* Adicione as demais aqui... */
+    "else"          { return symbol(sym.ELSE); }
+    "while"         { return symbol(sym.WHILE); }
 
-    /* TODO 4: Pontuação ( ) { } ; */
+    /* Pontuação */
     \(              { return symbol(sym.LPAREN); }
-    /* Adicione as demais aqui... */
+    \)              { return symbol(sym.RPAREN); }
+    \{              { return symbol(sym.LBRACE); }
+    \}              { return symbol(sym.RBRACE); }
+    \;              { return symbol(sym.SEMI); }
 
-    /* TODO 5: Operadores de Atribuição e Relacionais (=, ==, !=, <, >, <=, >=) */
-    /* CUIDADO COM A ORDEM! O JFlex casa a regra que aparece primeiro se houver empate de tamanho. */
-    /* Coloque os operadores duplos antes dos simples! */
+    /* Operadores de Atribuição e Relacionais */
+    /* CUIDADO! Operadores duplos antes dos simples! */
+    "=="            { return symbol(sym.REL_OP, yytext()); }
+    "!="            { return symbol(sym.REL_OP, yytext()); }
+    "<="            { return symbol(sym.REL_OP, yytext()); }
+    ">="            { return symbol(sym.REL_OP, yytext()); }
+    "<"             { return symbol(sym.REL_OP, yytext()); }
+    ">"             { return symbol(sym.REL_OP, yytext()); }
     "="             { return symbol(sym.ASSIGN); }
-    /* Adicione os relacionais aqui e retorne Tag.REL_OP ... */
 
-    /* TODO 6: Operadores Matemáticos (+, -, *, /, %) */
-    /* Dica: "+" | "-" retornam Tag.ADD_OP. Os outros retornam Tag.MUL_OP */
+    /* Operadores Matemáticos */
     "+" | "-"       { return symbol(sym.ADD_OP, yytext()); }
-    /* Adicione as multiplicações aqui... */
+    "*" | "/" | "%"  { return symbol(sym.MUL_OP, yytext()); }
 
     /* Regras para as Macros */
     {Identifier}    { return symbol(sym.ID, yytext()); }
     {Number}        { return symbol(sym.NUMBER, yytext()); }
 
-    /* Identificadores grandes demais (Captura o erro) */
-   {OversizedIdentifier} { throw new RuntimeException("Erro Léxico: Identificador gigante -> " + yytext()); }
-
     /* Fallback: Qualquer outro caractere não reconhecido gera um Erro */
     .   {throw new RuntimeException("Erro Léxico: Caractere Ilegal -> " + yytext()); }
-}
 
-/* Regra para o Final do Arquivo */
-<<EOF>>             { return token(Tag.EOF, ""); }
+    /* Regra para o Final do Arquivo */
+    <<EOF>>           { return symbol(sym.EOF, ""); }
+}
