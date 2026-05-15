@@ -64,8 +64,7 @@ if_stmt ::= IF LPAREN expr RPAREN THEN stmt
 
 while_stmt ::= WHILE LPAREN expr RPAREN stmt;
 
-block_stmt ::= LBRACE stmt_list RBRACE
-             | LBRACE RBRACE;
+block_stmt ::= LBRACE stmt_list RBRACE;
 
 null_stmt ::= SEMI;
 
